@@ -5,13 +5,14 @@ type userType  =Document &{
     email: string,
     password: string
 }
+type IUserDocument = userType & Document<{ _id: string }>
 
-const userSchema:Schema<userType> = new Schema({
+const userSchema:Schema<IUserDocument> = new Schema({
     name: String,
     email: String,
     password: String
 })
 
-const appUserModel:Model<userType> = mongoose.model("appUser", userSchema);
+const appUserModel:Model<IUserDocument> = mongoose.model("appUser", userSchema);
 
 export default appUserModel;
