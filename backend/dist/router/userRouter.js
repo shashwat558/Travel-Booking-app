@@ -32,7 +32,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
             return res.json(409).json({ message: "user already exist. Please sign-in" });
         }
         const salt = yield bcrypt_1.default.genSalt(8);
-        const hashedPassword = bcrypt_1.default.hash(password, salt);
+        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
         const user = yield userModel_1.default.create({ name, email, password: hashedPassword });
         res.status(200).json({ message: "User created succesfully", user });
     }
@@ -40,7 +40,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
         console.log(err);
     }
 }));
-router.post('/sign-up', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!(email || password)) {
         return res.status(500).json({ message: "Please provide username and password" });
@@ -56,18 +56,20 @@ router.post('/sign-up', (req, res) => __awaiter(void 0, void 0, void 0, function
         }
         const token = jsonwebtoken_1.default.sign({ email, id: existingUser._id.toString() }, jwtSecret);
         res.cookie("token", token);
-        res.status(200);
+        res.status(200).json({ messsage: "Logged in succesfully", token });
     }
     catch (err) {
         console.log(err);
     }
 }));
 router.get('/profile', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("ehy");
     try {
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized access" });
         }
-        const user = yield userModel_1.default.findById(req.user);
+        //@ts-ignore
+        const user = yield userModel_1.default.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

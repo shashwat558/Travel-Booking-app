@@ -22,7 +22,7 @@ router.post("/register", async(req:Request, res:Response) => {
             return res.json(409).json({message: "user already exist. Please sign-in"})
         }
         const salt = await bcrypt.genSalt(8);
-        const hashedPassword = bcrypt.hash(password, salt)
+        const hashedPassword =await bcrypt.hash(password, salt)
         const user =  await appUserModel.create({name, email, password: hashedPassword});
         res.status(200).json({message: "User created succesfully", user});
         
@@ -33,7 +33,7 @@ router.post("/register", async(req:Request, res:Response) => {
 
 })
 
-router.post('/sign-up', async(req:Request, res:Response) => {
+router.post('/login', async(req:Request, res:Response) => {
     const {email, password} = req.body;
     if(!(email||password)){
         return res.status(500).json({message: "Please provide username and password"});
@@ -47,9 +47,12 @@ router.post('/sign-up', async(req:Request, res:Response) => {
         if(!matchPassword){
             return res.status(500).json({message: "Incorrect username or password"})
         }
+        
         const token = jwt.sign({email, id: existingUser._id.toString()}, jwtSecret as string);
+        
+
         res.cookie("token", token)
-        res.status(200)
+        res.status(200).json({messsage: "Logged in succesfully", token})
          
 
     }catch(err){
@@ -58,12 +61,14 @@ router.post('/sign-up', async(req:Request, res:Response) => {
 })
 
 router.get('/profile', authMiddleware,async(req:CustomRequest, res:Response) => {
+
+    console.log("ehy")
     try{
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized access" });
         }
-
-        const user = await appUserModel.findById(req.user)
+        //@ts-ignore
+        const user = await appUserModel.findById(req.user.id)
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
