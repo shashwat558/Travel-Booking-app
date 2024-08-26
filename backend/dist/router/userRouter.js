@@ -28,6 +28,7 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     try {
         const userExists = yield userModel_1.default.findOne({ email });
+        console.log("hdhdks");
         if (userExists) {
             return res.json(409).json({ message: "user already exist. Please sign-in" });
         }

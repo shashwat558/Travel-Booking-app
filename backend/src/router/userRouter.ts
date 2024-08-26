@@ -18,6 +18,7 @@ router.post("/register", async(req:Request, res:Response) => {
     }
     try{
         const userExists = await appUserModel.findOne({email});
+        console.log("hdhdks")
         if(userExists){
             return res.json(409).json({message: "user already exist. Please sign-in"})
         }

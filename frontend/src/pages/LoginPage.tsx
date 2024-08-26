@@ -1,21 +1,39 @@
-import { useState } from "react"
+import axios from "axios";
+import React, { useState } from "react"
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setpassword] = useState<string>("");
+  
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try{
+      await axios.post('/http://localhost:8080/api/user/login', {email, password})
+      alert("Login succefull")
+    }catch(err){
+      console.error(err)
+      alert("Login failed")
+    }
+    
+  }
 
   return (
     <div className='mt-16 flex justify-center items-center'>
         <div className="mb-64">
           <h1 className="text-4xl text-black font-semibold text-center mb-5">Login</h1>
-          <form className="max-w-md mx-auto">
+          <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
             <input 
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
+            value={email}
             placeholder="your@email.com" 
             />
             <input 
+            onChange={(e) => setpassword(e.target.value)}
             type="password"
+            value={password}
             placeholder="password" 
             />
             <button className="primary">Login</button>
