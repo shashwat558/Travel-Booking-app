@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from 'dotenv';
 dotenv.config()
 const jwtSecret = process.env.JWT_SECRET as string;
-console.log(jwtSecret + "ljljd")
+
 
 
 export interface CustomRequest extends Request {

@@ -81,7 +81,7 @@ router.get('/profile', authMiddleware,async(req:CustomRequest, res:Response) => 
     }
 )
 
-router.get('/logout', (req:Request, res:Response)=> {
+router.post('/logout', (req:Request, res:Response)=> {
     res.clearCookie('token').json(true);
     res.status(200).json({message: "Logged out succesfully"})
 })

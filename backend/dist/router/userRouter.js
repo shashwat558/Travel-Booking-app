@@ -80,7 +80,7 @@ router.get('/profile', middleware_1.default, (req, res) => __awaiter(void 0, voi
         res.status(500).json({ message: "Internal server error" });
     }
 }));
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie('token').json(true);
     res.status(200).json({ message: "Logged out succesfully" });
 });
