@@ -45,15 +45,17 @@ router.post('/login', async(req:Request, res:Response) => {
             return res.status(404).json({message: "Email does not exist"});
         }
         const matchPassword = await bcrypt.compare(password, existingUser.password);
+        
         if(!matchPassword){
             return res.status(500).json({message: "Incorrect username or password"})
         }
         
         const token = jwt.sign({email, id: existingUser._id.toString()}, jwtSecret as string);
         
+        
 
         res.cookie("token", token)
-        res.status(200).json({messsage: "Logged in succesfully", token})
+        return res.status(200).json({messsage: "Logged in succesfully", token})
          
 
     }catch(err){

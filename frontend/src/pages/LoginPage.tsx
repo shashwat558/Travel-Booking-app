@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
-      const {data} = await axios.post('/http://localhost:8080/api/user/login', {email, password})
+      await axios.post('http://localhost:8080/api/user/login', {email, password})
       alert("Login succefull")
       setRedirect(true)
     }catch(err){

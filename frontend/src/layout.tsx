@@ -1,6 +1,7 @@
 
 import { Outlet } from 'react-router-dom'
-import Index from './pages'
+
+import Header from './components/Header'
 
 
 
@@ -8,7 +9,7 @@ import Index from './pages'
 const Layout = () => {
   return (
     <div>
-        <Index />
+        <Header/>
         <Outlet />
         
     </div>
