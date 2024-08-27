@@ -16,7 +16,7 @@ axios.defaults.withCredentials = true
     <Routes>
 
       <Route path='/' element={<Layout/>}>
-        
+        <Route index element={<Index/>}/>
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/register" element={<RegistorPage />}/>
 

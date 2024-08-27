@@ -1,22 +1,29 @@
 import axios from "axios";
 import React, { useState } from "react"
+import { Navigate } from "react-router-dom";
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setpassword] = useState<string>("");
+  const [redirect, setRedirect] = useState<boolean>(false);
   
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
-      await axios.post('/http://localhost:8080/api/user/login', {email, password})
+      const {data} = await axios.post('/http://localhost:8080/api/user/login', {email, password})
       alert("Login succefull")
+      setRedirect(true)
     }catch(err){
       console.error(err)
       alert("Login failed")
     }
     
+  }
+
+  if (redirect){
+    return <Navigate to={'/'}/>
   }
 
   return (

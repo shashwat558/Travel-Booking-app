@@ -1,9 +1,10 @@
 
-import Header from '../components/Header'
 
 const Index = () => {
   return (
-    <Header />
+    <div>
+        index
+    </div>
        
     
   )
