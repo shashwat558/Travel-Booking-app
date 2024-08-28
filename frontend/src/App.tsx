@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import Layout from './layout'
 import RegistorPage from './pages/RegisterPage'
 import axios from 'axios'
+import { UserContextProvider } from './UserContext'
 
 function App() {
  
@@ -13,19 +14,22 @@ axios.defaults.baseURL = 'http://localhost:8080/api';
 axios.defaults.withCredentials = true
 
   return (
-    <Routes>
+    <UserContextProvider>
+      <Routes>
 
-      <Route path='/' element={<Layout/>}>
-        <Route index element={<Index/>}/>
-        <Route path="/login" element={<LoginPage />}/>
-        <Route path="/register" element={<RegistorPage />}/>
+        <Route path='/' element={<Layout/>}>
+          <Route index element={<Index/>}/>
+          <Route path="/login" element={<LoginPage />}/>
+          <Route path="/register" element={<RegistorPage />}/>
 
-      </Route>
-      
+        </Route>
 
-     
 
-    </Routes>
+
+
+      </Routes>
+    </UserContextProvider>
+    
   )
 }
 

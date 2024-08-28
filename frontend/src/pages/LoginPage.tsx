@@ -1,18 +1,23 @@
 import axios from "axios";
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Navigate } from "react-router-dom";
+import { UserContext, UserContextType, User } from "../UserContext"
 
 
 const LoginPage = () => {
+  const context = useContext(UserContext);
   const [email, setEmail] = useState<string>("");
   const [password, setpassword] = useState<string>("");
   const [redirect, setRedirect] = useState<boolean>(false);
+  const { setUser } = context as UserContextType;
   
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
-      await axios.post('http://localhost:8080/api/user/login', {email, password})
+      const {data} = await axios.post<User>('http://localhost:8080/api/user/login', {email, password})
+      setUser(data)
+      console.log(setUser)
       alert("Login succefull")
       setRedirect(true)
     }catch(err){

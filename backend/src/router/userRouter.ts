@@ -55,7 +55,7 @@ router.post('/login', async(req:Request, res:Response) => {
         
 
         res.cookie("token", token)
-        return res.status(200).json({messsage: "Logged in succesfully", token})
+        return res.status(200).json({existingUser})
          
 
     }catch(err){

@@ -57,7 +57,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const token = jsonwebtoken_1.default.sign({ email, id: existingUser._id.toString() }, jwtSecret);
         res.cookie("token", token);
-        return res.status(200).json({ messsage: "Logged in succesfully", token });
+        return res.status(200).json({ existingUser });
     }
     catch (err) {
         console.log(err);
