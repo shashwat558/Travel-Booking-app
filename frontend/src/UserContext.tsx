@@ -1,11 +1,12 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import axios from 'axios';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 
 export interface User {
     __v: number;
-    id: string;
+    _id: string;
     email: string;
-     name: string;
+    name: string;
    password: string;
 }
 
@@ -13,6 +14,7 @@ export interface User {
 export interface UserContextType {
     user: User | null;
     setUser: React.Dispatch<React.SetStateAction<User | null>>;
+    ready: boolean
 }
 
 
@@ -26,9 +28,20 @@ type ChildrenProps = {
 
 export const UserContextProvider: React.FC<ChildrenProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [ready, setReady] = useState<boolean>(false)
+    useEffect(() =>{
+         axios.get<User>('/user/profile')
+          .then((({data}) => {
+            setUser(data)
+            setReady(true)
+            
+          }))
+          
+        
+    }, [])
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, ready }}>
             {children}
         </UserContext.Provider>
     );

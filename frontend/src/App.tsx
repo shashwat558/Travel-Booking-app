@@ -7,6 +7,7 @@ import Layout from './layout'
 import RegistorPage from './pages/RegisterPage'
 import axios from 'axios'
 import { UserContextProvider } from './UserContext'
+import ProfilePage from './pages/ProfilePage'
 
 function App() {
  
@@ -18,9 +19,11 @@ axios.defaults.withCredentials = true
       <Routes>
 
         <Route path='/' element={<Layout/>}>
+        <Route path='/profile' element= {<ProfilePage />}/>
           <Route index element={<Index/>}/>
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/register" element={<RegistorPage />}/>
+          
 
         </Route>
 
