@@ -25,7 +25,9 @@ axios.defaults.withCredentials = true
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/register" element={<RegistorPage />}/>
           <Route path='/profile/places' element={<PlacesPage />}/>
-          <Route path='/profile/:subpage' element={<ProfilePage/>}/>
+          <Route path='/profile/:?subpage' element={<ProfilePage/>}/>
+          <Route path='/profile/:subpage/:action' element={<ProfilePage/>}/>
+
           
 
         </Route>
