@@ -7,7 +7,7 @@ const PlacesPage:React.FC = () => {
   const {action} = useParams();
   const [title, settitle] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-  const [addPhotos, setAddPhotos] = useState<string[]>([]);
+  // const [addPhotos, setAddPhotos] = useState<string[]>([]);
   const [photoLink, setPhotoLink] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [perks, setPerks] = useState<string[]>([]);
@@ -63,12 +63,12 @@ const PlacesPage:React.FC = () => {
         <div className='text-left'>
           <form>
           {preInput('Title', 'Title for your place. should be short and catchy as in advertisement')}
-            <input type='text' placeholder='title' />
+            <input type='text' placeholder='title' value={title}  onChange={(e:  React.ChangeEvent<HTMLInputElement>) => settitle(e.target.value)}/>
             {preInput('Address', 'Address to this place')}
-            <input type='text' placeholder='Address' />
+            <input type='text' placeholder='Address' value={address} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}/>
             {preInput('Photos', 'more = better')}
             <div className='flex gap-2'>
-              <input type="text" placeholder={"Add using a link ...jpg"} />
+              <input type="text" placeholder={"Add using a link ...jpg"} value={photoLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhotoLink(e.target.value)}/>
               <button className='bg-gray-400 px-4 rounded-md'>Add&nbsp;Photos</button>
             </div>
             <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
@@ -80,34 +80,35 @@ const PlacesPage:React.FC = () => {
             </button>
             </div>
             {preInput('Description','description that defines your place')}
-            <textarea />
+            <textarea  value={description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}/>
 
             {preInput('Perks','select all the perks of your place')}
             
               <div className='grid gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6'>
-                <Perk />
+                
+                <Perk selected={perks} onChange={setPerks}/>
                 
                 
               </div>
             
             <h2 className='text-xl font-semibold mt-6'>Extra Info</h2>
             <p className='text-gray-600'>House rules, neighbourhood etc.</p>
-            <textarea />
+            <textarea value={extraInfo} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setExtraInfo(e.target.value)} />
             
             <h2 className='text-xl font-semibold mt-6'>Check in&out times, max guests</h2>
             <p className='text-gray-600'>Add check-in and check-out time and remember to have some time window to clean the room between the guests</p>
             <div className='grid sm:grid-cols-3 gap-2'>
               <div>
                 <h3 className='mt-2 -mb-1 ' >Check in time</h3>
-                <input type="text" placeholder='14:00' />
+                <input type="text" value={checkIn} placeholder='14:00' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckIn(e.target.value)} />
               </div>
               <div>
                 <h3 className='mt-2 -mb-1  '>Check out time</h3>
-                <input type="text"/>
+                <input type="text" value={checkOut} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckOut(e.target.value)}/>
               </div>
               <div>
                 <h3 className='mt-2 -mb-1  '>Max. number of guests</h3>
-                <input type="text"/>
+                <input type="text" value={maxGuest} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMaxGuest(e.target.value)}/>
               </div>
             </div>
             <button className="primary my-4">Save</button>

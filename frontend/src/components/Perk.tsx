@@ -1,6 +1,12 @@
 import React from 'react'
 
-const Perk = () => {
+interface props {
+  selected: string[];
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+
+const Perk: React.FC<props> = ({selected, onChange}:props) => {
   return (
     <>
         <label className='border p-4 flex items-center gap-2 rounded-2xl'>
