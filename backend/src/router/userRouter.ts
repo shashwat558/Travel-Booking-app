@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import jwt, {JwtPayload} from 'jsonwebtoken';
 import  dotenv from 'dotenv';
+import download from 'image-downloader';
 
 
 import express from "express";
@@ -87,6 +88,17 @@ router.get('/profile', authMiddleware,async(req:CustomRequest, res:Response) => 
 router.post('/logout', (req:Request, res:Response)=> {
     res.clearCookie('token').json(true);
     res.status(200).json({message: "Logged out succesfully"})
+})
+
+
+router.post('/uplaodByLink', authMiddleware, async(req: Request, res: Response) => {
+    const {link} = req.body;
+    const imageName = Date.now() + '.jpg'
+    await download.image({
+        url: link,
+        dest: __dirname+'./uploads/' + imageName
+    })
+    res.json(__dirname+'./uploads/' + imageName)
 })
 
 

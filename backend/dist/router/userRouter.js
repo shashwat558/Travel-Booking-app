@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const image_downloader_1 = __importDefault(require("image-downloader"));
 const express_1 = __importDefault(require("express"));
 const userModel_1 = __importDefault(require("../db/userModel"));
 const middleware_1 = __importDefault(require("../middleware"));
@@ -74,7 +75,7 @@ router.get('/profile', middleware_1.default, (req, res) => __awaiter(void 0, voi
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        return res.status(200).json({ user });
+        res.status(200).json({ user });
     }
     catch (err) {
         console.error(err);
@@ -85,4 +86,13 @@ router.post('/logout', (req, res) => {
     res.clearCookie('token').json(true);
     res.status(200).json({ message: "Logged out succesfully" });
 });
+router.post('/uplaodByLink', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { link } = req.body;
+    const imageName = Date.now() + '.jpg';
+    yield image_downloader_1.default.image({
+        url: link,
+        dest: __dirname + './uploads/' + imageName
+    });
+    res.json(__dirname + './uploads/' + imageName);
+}));
 exports.default = router;

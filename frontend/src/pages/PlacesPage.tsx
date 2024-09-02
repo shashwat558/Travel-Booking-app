@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Perk from '../components/Perk';
+import axios from 'axios';
 // import AccountNav from './AccountNav'
 
 const PlacesPage:React.FC = () => {
@@ -43,6 +44,11 @@ const PlacesPage:React.FC = () => {
     );
   }
 
+  async function addPhotoByLink(e:  React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await axios.post('http://localhost:8080/api/user/uploadByLink', {link:photoLink})
+  }
+
 
   return (
     <div>
@@ -69,7 +75,7 @@ const PlacesPage:React.FC = () => {
             {preInput('Photos', 'more = better')}
             <div className='flex gap-2'>
               <input type="text" placeholder={"Add using a link ...jpg"} value={photoLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhotoLink(e.target.value)}/>
-              <button className='bg-gray-400 px-4 rounded-md'>Add&nbsp;Photos</button>
+              <button className='bg-gray-400 px-4 rounded-md' onClick={addPhotoByLink}>Add&nbsp;Photos</button>
             </div>
             <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
             <button className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm '>
@@ -108,7 +114,7 @@ const PlacesPage:React.FC = () => {
               </div>
               <div>
                 <h3 className='mt-2 -mb-1  '>Max. number of guests</h3>
-                <input type="text" value={maxGuest} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMaxGuest(e.target.value)}/>
+                <input type="number" value={maxGuest} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMaxGuest(Number(e.target.value))}/>
               </div>
             </div>
             <button className="primary my-4">Save</button>
