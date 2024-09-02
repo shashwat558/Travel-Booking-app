@@ -3,11 +3,13 @@ import bcrypt from 'bcrypt';
 import jwt, {JwtPayload} from 'jsonwebtoken';
 import  dotenv from 'dotenv';
 import download from 'image-downloader';
+import fs from 'fs';
 
 
 import express from "express";
 import appUserModel from "../db/userModel";
 import authMiddleware, { CustomRequest } from "../middleware";
+import path from "path";
 const router = express.Router();
 dotenv.config()
 const jwtSecret = process.env.JWT_SECRET;
@@ -91,15 +93,24 @@ router.post('/logout', (req:Request, res:Response)=> {
 })
 
 
-router.post('/uplaodByLink', authMiddleware, async(req: Request, res: Response) => {
-    const {link} = req.body;
-    const imageName = Date.now() + '.jpg'
-    await download.image({
+router.post('/uploadByLink', async(req: Request, res: Response) => {
+    try{
+        const { link } = req.body;
+        const imageName = Date.now() + '.jpg'
+        const dest = path.join(__dirname, 'uploads', imageName)
+    
+    const options = await download.image({
         url: link,
-        dest: __dirname+'./uploads/' + imageName
+        dest: dest
     })
-    res.json(__dirname+'./uploads/' + imageName)
-})
+    
+    res.status(200).json(imageName)
+    
+} catch(err){
+    console.log(err)
+    res.status(500).json({message: "oo"})
+}})
+
 
 
 export default router;

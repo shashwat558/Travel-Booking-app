@@ -19,6 +19,7 @@ const image_downloader_1 = __importDefault(require("image-downloader"));
 const express_1 = __importDefault(require("express"));
 const userModel_1 = __importDefault(require("../db/userModel"));
 const middleware_1 = __importDefault(require("../middleware"));
+const path_1 = __importDefault(require("path"));
 const router = express_1.default.Router();
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -86,13 +87,20 @@ router.post('/logout', (req, res) => {
     res.clearCookie('token').json(true);
     res.status(200).json({ message: "Logged out succesfully" });
 });
-router.post('/uplaodByLink', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { link } = req.body;
-    const imageName = Date.now() + '.jpg';
-    yield image_downloader_1.default.image({
-        url: link,
-        dest: __dirname + './uploads/' + imageName
-    });
-    res.json(__dirname + './uploads/' + imageName);
+router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { link } = req.body;
+        const imageName = Date.now() + '.jpg';
+        const dest = path_1.default.join(__dirname, 'uploads', imageName);
+        const options = yield image_downloader_1.default.image({
+            url: link,
+            dest: dest
+        });
+        res.status(200).json(imageName);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "oo" });
+    }
 }));
 exports.default = router;

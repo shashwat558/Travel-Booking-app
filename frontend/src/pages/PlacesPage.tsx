@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { MouseEvent, ReactElement, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Perk from '../components/Perk';
 import axios from 'axios';
@@ -44,10 +44,18 @@ const PlacesPage:React.FC = () => {
     );
   }
 
-  async function addPhotoByLink(e:  React.FormEvent<HTMLFormElement>) {
+  const addPhotoByLink = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    await axios.post('http://localhost:8080/api/user/uploadByLink', {link:photoLink})
-  }
+    
+    try {
+      await axios.post('http://localhost:8080/api/user/uploadByLink', { link: photoLink });
+      
+      // Handle success (e.g., show a success message or clear the input)
+    } catch (error) {
+      // Handle error (e.g., show an error message)
+      console.error(error);
+    }
+  };
 
 
   return (
