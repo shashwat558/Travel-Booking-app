@@ -90,7 +90,7 @@ router.post('/logout', (req, res) => {
 router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { link } = req.body;
-        const imageName = Date.now() + '.jpg';
+        const imageName = "image" + Date.now() + '.jpg';
         const dest = path_1.default.join(__dirname, 'uploads', imageName);
         const options = yield image_downloader_1.default.image({
             url: link,

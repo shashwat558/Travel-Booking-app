@@ -96,7 +96,7 @@ router.post('/logout', (req:Request, res:Response)=> {
 router.post('/uploadByLink', async(req: Request, res: Response) => {
     try{
         const { link } = req.body;
-        const imageName = Date.now() + '.jpg'
+        const imageName ="image" +  Date.now() + '.jpg'
         const dest = path.join(__dirname, 'uploads', imageName)
     
     const options = await download.image({

@@ -18,6 +18,7 @@ app.use((0, cors_1.default)({
     credentials: true,
     origin: 'http://localhost:5173'
 }));
+app.use('/uploads', express_1.default.static(__dirname + '/router' + '/uploads'));
 app.use('/api/user', userRouter_1.default);
 app.listen(port, () => { console.log(`listening on the port ${port}`); });
 mongoose_1.default.connect(process.env.DB_URL);

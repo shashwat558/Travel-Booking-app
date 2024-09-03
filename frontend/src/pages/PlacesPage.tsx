@@ -1,14 +1,19 @@
-import React, { MouseEvent, ReactElement, useState } from 'react'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { ChangeEvent, MouseEvent, ReactElement, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Perk from '../components/Perk';
 import axios from 'axios';
 // import AccountNav from './AccountNav'
 
+interface uploadData {
+  filename: string
+}
+
 const PlacesPage:React.FC = () => {
   const {action} = useParams();
   const [title, settitle] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-  // const [addPhotos, setAddPhotos] = useState<string[]>([]);
+  const [addPhotos, setAddPhotos] = useState<string[]>([]);
   const [photoLink, setPhotoLink] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [perks, setPerks] = useState<string[]>([]);
@@ -48,7 +53,13 @@ const PlacesPage:React.FC = () => {
     e.preventDefault();
     
     try {
-      await axios.post('http://localhost:8080/api/user/uploadByLink', { link: photoLink });
+      const {data:filename} = await axios.post<uploadData>('http://localhost:8080/api/user/uploadByLink', { link: photoLink });
+      //@ts-expect-error
+      setAddPhotos((prev) => {
+        return [...prev, filename]
+      })
+      setPhotoLink("")
+
       
       // Handle success (e.g., show a success message or clear the input)
     } catch (error) {
@@ -56,6 +67,25 @@ const PlacesPage:React.FC = () => {
       console.error(error);
     }
   };
+
+  const uploadPhoto = async (e:ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const data = new FormData();
+    //@ts-ignore
+    data.set('photos', files)
+    await axios.post('/uploads', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(response => {
+      const {data:filename} = response
+      //@ts-expect-error
+      setAddPhotos((prev) => {
+        return [...prev, filename]
+      })
+      setPhotoLink("")
+    })
+  }
 
 
   return (
@@ -86,12 +116,17 @@ const PlacesPage:React.FC = () => {
               <button className='bg-gray-400 px-4 rounded-md' onClick={addPhotoByLink}>Add&nbsp;Photos</button>
             </div>
             <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-            <button className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm '>
+              {addPhotos.length > 0 && addPhotos.map((link) => (
+                <div className='mr-2'><img  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} alt={link} /></div>
+              ))}
+            <label className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm cursor-pointer'>
+            <input type="file" className='hidden' onChange={uploadPhoto}/>
+
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
 </svg>Uplaod
 
-            </button>
+            </label>
             </div>
             {preInput('Description','description that defines your place')}
             <textarea  value={description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}/>
