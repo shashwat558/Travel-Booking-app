@@ -71,21 +71,33 @@ const PlacesPage:React.FC = () => {
   const uploadPhoto = async (e:ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const data = new FormData();
-    //@ts-ignore
-    data.set('photos', files)
-    await axios.post('/uploads', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(response => {
-      const {data:filename} = response
-      //@ts-expect-error
-      setAddPhotos((prev) => {
-        return [...prev, filename]
+    //@ts-ignore 
+    for(let i=0; i< files.length; i++){
+      //@ts-ignore
+      data.append('photos', files[i])
+
+    }
+    
+    
+    try{
+      await axios.post('http://localhost:8080/api/user/upload', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        const {data:filenames}= response
+        setAddPhotos((prev) => {
+        
+
+          return [...prev, ...filenames as string]
+        })
+        setPhotoLink("")
       })
-      setPhotoLink("")
-    })
-  }
+    }
+
+    catch(err){
+      console.log(err)
+    }}
 
 
   return (
@@ -117,7 +129,7 @@ const PlacesPage:React.FC = () => {
             </div>
             <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
               {addPhotos.length > 0 && addPhotos.map((link) => (
-                <div className='mr-2'><img  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} alt={link} /></div>
+                <div className='mr-2'><img  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} /></div>
               ))}
             <label className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm cursor-pointer'>
             <input type="file" className='hidden' onChange={uploadPhoto}/>

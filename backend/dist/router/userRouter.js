@@ -16,6 +16,8 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const image_downloader_1 = __importDefault(require("image-downloader"));
+const fs_1 = __importDefault(require("fs"));
+const multer_1 = __importDefault(require("multer"));
 const express_1 = __importDefault(require("express"));
 const userModel_1 = __importDefault(require("../db/userModel"));
 const middleware_1 = __importDefault(require("../middleware"));
@@ -103,4 +105,22 @@ router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ message: "oo" });
     }
 }));
+const photoMiddleware = (0, multer_1.default)({ dest: 'uploads/' });
+router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+    const files = req.files;
+    const uploadFiles = [];
+    if (!files || !Array.isArray(files)) {
+        return res.status(400).json({ message: 'No files uploaded' });
+    }
+    for (let i = 0; i < (files === null || files === void 0 ? void 0 : files.length); i++) {
+        const { path, originalname } = files[i];
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        const newPath = path + "." + ext;
+        fs_1.default.renameSync(path, newPath);
+        uploadFiles.push(newPath.replace('uploads/', ''));
+        console.log(uploadFiles);
+    }
+    return res.status(200).json(uploadFiles);
+});
 exports.default = router;

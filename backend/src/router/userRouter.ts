@@ -4,6 +4,7 @@ import jwt, {JwtPayload} from 'jsonwebtoken';
 import  dotenv from 'dotenv';
 import download from 'image-downloader';
 import fs from 'fs';
+import multer, { Multer } from "multer";
 
 
 import express from "express";
@@ -110,7 +111,26 @@ router.post('/uploadByLink', async(req: Request, res: Response) => {
     console.log(err)
     res.status(500).json({message: "oo"})
 }})
+const photoMiddleware = multer({dest: 'uploads/'})
+router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: Response) => {
+    const files = req.files as Express.Multer.File[] | undefined;
+    const uploadFiles: string[] = [];
+    if (!files || !Array.isArray(files)) {
+        return res.status(400).json({ message: 'No files uploaded' });
+    }
+    for(let i = 0; i< files?.length; i++){
+        const {path, originalname} = files[i]
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        const newPath = path + "." + ext;
+        fs.renameSync(path, newPath);
+        uploadFiles.push(newPath.replace('uploads/', ''))
+        console.log(uploadFiles)
+    }
+    return res.status(200).json(uploadFiles)
+    
 
+})
 
 
 export default router;
