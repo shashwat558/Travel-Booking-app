@@ -114,6 +114,7 @@ router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
     }
     for (let i = 0; i < (files === null || files === void 0 ? void 0 : files.length); i++) {
         const { path, originalname } = files[i];
+        console.log(files);
         const parts = originalname.split('.');
         const ext = parts[parts.length - 1];
         const newPath = path + "." + ext;

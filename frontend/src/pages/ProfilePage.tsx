@@ -1,5 +1,5 @@
-import {useContext, useState} from "react";
-import {UserContext, UserContextType} from "../UserContext.jsx";
+import {useContext, useEffect, useState} from "react";
+import {User, UserContext, UserContextType} from "../UserContext.jsx";
 import { Navigate, useParams} from "react-router-dom";
 import axios from "axios";
 
@@ -9,10 +9,27 @@ import PlacesPage from "./PlacesPage.js";
 export default function ProfilePage() {
   const [redirect,setRedirect] = useState("");
   const {ready,user,setUser} = useContext(UserContext) as UserContextType;
+
   let {subpage} = useParams();
   if (subpage === undefined) {
     subpage = 'profile';
   }
+
+  async function fetchUserData() {
+    try {
+      const response = await axios.get<{ user: User }>('/user/profile');
+      setUser(response.data.user); // Extract and set the user object
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
+
+  useEffect(() => {
+    if (ready && user) {
+      fetchUserData(); // Fetch user data when the component is mounted or user is ready
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   async function logout() {
     await axios.post('/user/logout');

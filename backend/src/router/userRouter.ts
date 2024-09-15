@@ -111,6 +111,8 @@ router.post('/uploadByLink', async(req: Request, res: Response) => {
     console.log(err)
     res.status(500).json({message: "oo"})
 }})
+
+
 const photoMiddleware = multer({dest: 'uploads/'})
 router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[] | undefined;
@@ -120,6 +122,7 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
     }
     for(let i = 0; i< files?.length; i++){
         const {path, originalname} = files[i]
+        console.log(files)
         const parts = originalname.split('.');
         const ext = parts[parts.length - 1];
         const newPath = path + "." + ext;
