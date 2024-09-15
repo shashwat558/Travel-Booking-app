@@ -30,9 +30,9 @@ export const UserContextProvider: React.FC<ChildrenProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState<boolean>(false)
     useEffect(() =>{
-         axios.get<User>('/user/profile')
+         axios.get<{user:User}>('/user/profile')
           .then((({data}) => {
-            setUser(data)
+            setUser(data.user)
             setReady(true)
             
           }))

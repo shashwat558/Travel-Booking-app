@@ -8,9 +8,8 @@ import axios from 'axios';
 interface uploadDataLink {
   filename: string
 }
-interface UploadData {
-  filenames: string[]
-}
+type UploadData =string[]
+
 
 const PlacesPage:React.FC = () => {
   const {action} = useParams();
@@ -56,7 +55,8 @@ const PlacesPage:React.FC = () => {
     e.preventDefault();
     
     try {
-      const {data:filename} = await axios.post<uploadDataLink>('http://localhost:8080/api/user/uploadByLink', { link: photoLink });
+      const {data:filename} = await axios.post<uploadDataLink>('http://localhost:8080/api/user/uploadByLink', { link: photoLink },);
+     
       //@ts-expect-error
       setAddPhotos((prev) => {
         return [...prev, filename]
@@ -97,7 +97,7 @@ const PlacesPage:React.FC = () => {
         const {data:filenames}= response
         setAddPhotos((prev) => {
         
-         //@ts-ignore
+         
           return [...prev, ...filenames]
         })
         
