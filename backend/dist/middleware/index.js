@@ -19,7 +19,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies.token;
     if (!token) {
-        return res.status(401).json({ message: "Unacuthorized access" });
+        return res.status(401).json({ message: "Unauthorized access" });
     }
     try {
         const decoded = yield jsonwebtoken_1.default.verify(token, jwtSecret);

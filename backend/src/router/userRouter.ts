@@ -22,14 +22,14 @@ router.post("/register", async(req:Request, res:Response) => {
     }
     try{
         const userExists = await appUserModel.findOne({email});
-        console.log("hdhdks")
+        console.log("hahs")
         if(userExists){
             return res.json(409).json({message: "user already exist. Please sign-in"})
         }
         const salt = await bcrypt.genSalt(8);
         const hashedPassword =await bcrypt.hash(password, salt)
         const user =  await appUserModel.create({name, email, password: hashedPassword});
-        res.status(200).json({message: "User created succesfully", user});
+        res.status(200).json({message: "User created successfully", user});
         
 
     }catch(err){
@@ -90,7 +90,7 @@ router.get('/profile', authMiddleware,async(req:CustomRequest, res:Response) => 
 
 router.post('/logout', (req:Request, res:Response)=> {
     res.clearCookie('token').json(true);
-    res.status(200).json({message: "Logged out succesfully"})
+    res.status(200).json({message: "Logged out successfully"})
 })
 
 
@@ -135,5 +135,9 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
 
 })
 
+router.post('/user/places', authMiddleware, async(req:Request, res:Response) => {
+    const {title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
+    
+})
 
 export default router;

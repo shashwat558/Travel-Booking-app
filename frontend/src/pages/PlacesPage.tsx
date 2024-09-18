@@ -1,22 +1,19 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { ChangeEvent, MouseEvent, ReactElement, useState } from 'react'
+
+import React, { ChangeEvent,  ReactElement, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Perk from '../components/Perk';
 import axios from 'axios';
+import PhotoUplaod from '../components/PhotoUplaod';
 // import AccountNav from './AccountNav'
 
-interface uploadDataLink {
-  filename: string
-}
-type UploadData =string[]
+
 
 
 const PlacesPage:React.FC = () => {
   const {action} = useParams();
   const [title, settitle] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-  const [addPhotos, setAddPhotos] = useState<string[]>([]);
-  const [photoLink, setPhotoLink] = useState<string>("");
+  const [addedPhotos, setAddedPhotos] = useState<string[]>([]);
   const [description, setDescription] = useState<string>("");
   const [perks, setPerks] = useState<string[]>([]);
   const [extraInfo, setExtraInfo] = useState<string>("");
@@ -51,58 +48,14 @@ const PlacesPage:React.FC = () => {
     );
   }
 
-  const addPhotoByLink = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    
-    try {
-      const {data:filename} = await axios.post<uploadDataLink>('http://localhost:8080/api/user/uploadByLink', { link: photoLink },);
-     
-      //@ts-expect-error
-      setAddPhotos((prev) => {
-        return [...prev, filename]
-      })
-      setPhotoLink("")
+  
 
-      
-      
-    } catch (error) {
-      
-      console.error(error);
+  const addNewPlace  =async (e:ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const data = {
+      title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
     }
-  };
-
-  const uploadPhoto = async (e:ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if(!files) {
-      console.log("No data selected")
-      return;
-    }
-    const data = new FormData();
-    console.log(data)
-     
-    for(let i=0; i< files.length; i++){
-     
-      data.append('photos', files[i])
-
-    }
-    console.log(data)
-    
-    
-    
-      await axios.post<UploadData>('http://localhost:8080/api/user/upload', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(response => {
-        const {data:filenames}= response
-        setAddPhotos((prev) => {
-        
-         
-          return [...prev, ...filenames]
-        })
-        
-      })
-    
+    await axios.post('/user/places', data)
 
   }
 
@@ -124,29 +77,17 @@ const PlacesPage:React.FC = () => {
       )}
       {action === "new" && (
         <div className='text-left'>
-          <form>
+          <form onSubmit={addNewPlace}>
           {preInput('Title', 'Title for your place. should be short and catchy as in advertisement')}
             <input type='text' placeholder='title' value={title}  onChange={(e:  React.ChangeEvent<HTMLInputElement>) => settitle(e.target.value)}/>
             {preInput('Address', 'Address to this place')}
             <input type='text' placeholder='Address' value={address} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}/>
             {preInput('Photos', 'more = better')}
-            <div className='flex gap-2'>
-              <input type="text" placeholder={"Add using a link ...jpg"} value={photoLink} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhotoLink(e.target.value)}/>
-              <button className='bg-gray-400 px-4 rounded-md' onClick={addPhotoByLink}>Add&nbsp;Photos</button>
-            </div>
-            <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-              {addPhotos.length > 0 && addPhotos.map((link) => (
-                <div className='mr-2'><img  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} /></div>
-              ))}
-            <label className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm cursor-pointer'>
-            <input type="file" className='hidden' multiple onChange={uploadPhoto}/>
 
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-</svg>Uplaod
 
-            </label>
-            </div>
+            <PhotoUplaod addedPhotos={addedPhotos} onChange={setAddedPhotos}/>
+
+            
             {preInput('Description','description that defines your place')}
             <textarea  value={description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}/>
 

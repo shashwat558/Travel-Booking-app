@@ -18,7 +18,7 @@ const LoginPage = () => {
       const {data} = await axios.post<User>('http://localhost:8080/api/user/login', {email, password})
       setUser(data)
       
-      alert("Login succefull")
+      alert("Login successful")
       setRedirect(true)
     }catch(err){
       console.error(err)
