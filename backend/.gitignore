@@ -1,5 +1,5 @@
 .env
 /node_modules
 /backend/uploads
-/backend/src/uploads
+
 
