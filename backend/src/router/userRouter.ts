@@ -11,6 +11,7 @@ import express from "express";
 import appUserModel from "../db/userModel";
 import authMiddleware, { CustomRequest } from "../middleware";
 import path from "path";
+import placeModel from "../db/placeModel";
 const router = express.Router();
 dotenv.config()
 const jwtSecret = process.env.JWT_SECRET;
@@ -112,8 +113,8 @@ router.post('/uploadByLink', async(req: Request, res: Response) => {
     res.status(500).json({message: "oo"})
 }})
 
-
-const photoMiddleware = multer({dest: 'uploads/'})
+const dest = path.join(__dirname, 'uploads')
+const photoMiddleware = multer({dest: dest})
 router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: Response) => {
     const files = req.files as Express.Multer.File[] | undefined;
     const uploadFiles: string[] = [];
@@ -135,8 +136,21 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
 
 })
 
-router.post('/user/places', authMiddleware, async(req:Request, res:Response) => {
+router.post('/places', authMiddleware, async(req:Request, res:Response) => {
+   try {
     const {title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
+    const CustomReq = req as CustomRequest;
+    //@ts-ignore
+    const username = req.user?.name
+    const newPlace = await  placeModel.create({
+        owner: username,
+        title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
+    })
+    res.json(newPlace)
+   } catch (error) {
+    console.log(error)
+    
+   }
     
 })
 

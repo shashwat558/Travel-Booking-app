@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import axios from "axios";
 import { ChangeEvent, FC, MouseEvent, useState } from "react";
 
@@ -26,7 +26,7 @@ const PhotoUplaod:FC<PhotoUplaodProps> = ({addedPhotos, onChange}) => {
         try {
           const {data:filename} = await axios.post<uploadDataLink>('http://localhost:8080/api/user/uploadByLink', { link: photoLink },);
          
-          //@ts-expect-error
+          
           onChange((prev) => {
             return [...prev, filename]}); // Pass the updated array directly
             setPhotoLink("");
@@ -64,10 +64,10 @@ const PhotoUplaod:FC<PhotoUplaodProps> = ({addedPhotos, onChange}) => {
           }).then(response => {
             const {data:filenames}= response
          
-          //@ts-expect-error
-            onChange((prev) => {
-              return  [...prev, ...filenames]
-            }); // Pass the updated array directly
+          
+            onChange(
+              [...addedPhotos, ...filenames]
+            ); // Pass the updated array directly
     setPhotoLink("");
             
           })
@@ -82,7 +82,7 @@ const PhotoUplaod:FC<PhotoUplaodProps> = ({addedPhotos, onChange}) => {
   </div>
   <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
     {addedPhotos.length > 0 && addedPhotos.map((link) => (
-      <div className='mr-2'><img  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} /></div>
+      <div className='mr-2'><img width={100} height={100}  className ="rounded-2xl" src={"http://localhost:8080/uploads/"+link} /></div>
     ))}
   <label className='border border-gray-700 bg-transparent rounded-md text-2xl flex gap-1  p-8 shadow-sm cursor-pointer'>
   <input type="file" className='hidden' multiple onChange={uploadPhoto}/>

@@ -22,6 +22,7 @@ const express_1 = __importDefault(require("express"));
 const userModel_1 = __importDefault(require("../db/userModel"));
 const middleware_1 = __importDefault(require("../middleware"));
 const path_1 = __importDefault(require("path"));
+const placeModel_1 = __importDefault(require("../db/placeModel"));
 const router = express_1.default.Router();
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -32,14 +33,14 @@ router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     try {
         const userExists = yield userModel_1.default.findOne({ email });
-        console.log("hdhdks");
+        console.log("hahs");
         if (userExists) {
             return res.json(409).json({ message: "user already exist. Please sign-in" });
         }
         const salt = yield bcrypt_1.default.genSalt(8);
         const hashedPassword = yield bcrypt_1.default.hash(password, salt);
         const user = yield userModel_1.default.create({ name, email, password: hashedPassword });
-        res.status(200).json({ message: "User created succesfully", user });
+        res.status(200).json({ message: "User created successfully", user });
     }
     catch (err) {
         console.log(err);
@@ -87,7 +88,7 @@ router.get('/profile', middleware_1.default, (req, res) => __awaiter(void 0, voi
 }));
 router.post('/logout', (req, res) => {
     res.clearCookie('token').json(true);
-    res.status(200).json({ message: "Logged out succesfully" });
+    res.status(200).json({ message: "Logged out successfully" });
 });
 router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -105,7 +106,8 @@ router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ message: "oo" });
     }
 }));
-const photoMiddleware = (0, multer_1.default)({ dest: 'uploads/' });
+const dest = path_1.default.join(__dirname, 'uploads');
+const photoMiddleware = (0, multer_1.default)({ dest: dest });
 router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
     const files = req.files;
     const uploadFiles = [];
@@ -124,4 +126,21 @@ router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
     }
     return res.status(200).json(uploadFiles);
 });
+router.post('/places', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const { title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut } = req.body;
+        const CustomReq = req;
+        //@ts-ignore
+        const username = (_a = req.user) === null || _a === void 0 ? void 0 : _a.name;
+        const newPlace = yield placeModel_1.default.create({
+            owner: username,
+            title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
+        });
+        res.json(newPlace);
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
 exports.default = router;

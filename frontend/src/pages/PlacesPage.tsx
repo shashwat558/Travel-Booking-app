@@ -1,6 +1,6 @@
 
 import React, { ChangeEvent,  ReactElement, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Perk from '../components/Perk';
 import axios from 'axios';
 import PhotoUplaod from '../components/PhotoUplaod';
@@ -10,6 +10,7 @@ import PhotoUplaod from '../components/PhotoUplaod';
 
 
 const PlacesPage:React.FC = () => {
+
   const {action} = useParams();
   const [title, settitle] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -20,6 +21,9 @@ const PlacesPage:React.FC = () => {
   const [checkIn, setCheckIn] = useState<string>("");
   const [checkOut, setCheckOut] = useState<string>("");
   const [maxGuest, setMaxGuest] = useState<number>(1);
+
+  const navigate = useNavigate();
+
 
 
   function inputHeader(text:string): ReactElement{
@@ -50,12 +54,14 @@ const PlacesPage:React.FC = () => {
 
   
 
-  const addNewPlace  =async (e:ChangeEvent<HTMLFormElement>) => {
+  const addNewPlace  = async (e:ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
     const data = {
       title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
     }
     await axios.post('/user/places', data)
+    navigate("/profile/places")
+    
 
   }
 
