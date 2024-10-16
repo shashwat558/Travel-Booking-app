@@ -9,8 +9,8 @@ interface uploadDataLink {
   type UploadData =string[]
 
   interface PhotoUplaodProps {
-    addedPhotos: string[]
-    onChange: (addedPhotos: string[]) => void
+    addedPhotos: string[];
+    onChange: (addedPhotos: string[]) => void;
   }
   
 
@@ -22,14 +22,27 @@ const PhotoUplaod:FC<PhotoUplaodProps> = ({addedPhotos, onChange}) => {
 
     const addPhotoByLink = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+
+        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
+
+       if (!urlPattern.test(photoLink)) {
+    alert('Please enter a valid image URL (must start with http:// or https:// and end with .jpg, .png, etc.).');
+    return;
+  }
         
         try {
-          const {data:filename} = await axios.post<uploadDataLink>('http://localhost:8080/api/user/uploadByLink', { link: photoLink },);
-         
-          
+          const {data:filename} = await axios.post('/user/uploadByLink', {link: photoLink});
+          console.log(typeof(filename))
           onChange((prev) => {
-            return [...prev, filename]}); // Pass the updated array directly
-            setPhotoLink("");
+            return [...prev, filename];
+          });
+          setPhotoLink('');
+          ;
+
+
+          
+          
+          setPhotoLink('');
     
           
           

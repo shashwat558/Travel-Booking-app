@@ -96,8 +96,14 @@ router.post('/logout', (req:Request, res:Response)=> {
 
 
 router.post('/uploadByLink', async(req: Request, res: Response) => {
+    
     try{
         const { link } = req.body;
+        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
+
+  if (!urlPattern.test(link)) {
+    return res.status(400).json({ error: 'Invalid image URL. Please provide a valid HTTP or HTTPS URL pointing to an image file.' });
+  }
         const imageName ="image" +  Date.now() + '.jpg'
         const dest = path.join(__dirname, 'uploads', imageName)
     
@@ -106,7 +112,7 @@ router.post('/uploadByLink', async(req: Request, res: Response) => {
         dest: dest
     })
     
-    res.status(200).json(imageName)
+    res.status(200).json(imageName as string)
     
 } catch(err){
     console.log(err)

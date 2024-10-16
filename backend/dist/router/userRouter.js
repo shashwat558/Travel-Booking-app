@@ -93,6 +93,10 @@ router.post('/logout', (req, res) => {
 router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { link } = req.body;
+        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
+        if (!urlPattern.test(link)) {
+            return res.status(400).json({ error: 'Invalid image URL. Please provide a valid HTTP or HTTPS URL pointing to an image file.' });
+        }
         const imageName = "image" + Date.now() + '.jpg';
         const dest = path_1.default.join(__dirname, 'uploads', imageName);
         const options = yield image_downloader_1.default.image({
