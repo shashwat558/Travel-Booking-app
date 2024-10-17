@@ -19,6 +19,7 @@ const authMiddleware = async (req:Request, res:Response, next: NextFunction) => 
     try{
 
     const decoded = await jwt.verify(token, jwtSecret) as JwtPayload;
+    
     if(decoded){
         (req as CustomRequest).user = decoded;
         next()       

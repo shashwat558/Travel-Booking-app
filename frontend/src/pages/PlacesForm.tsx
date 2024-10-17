@@ -3,6 +3,7 @@ import React, { ChangeEvent, ReactElement, useState } from 'react'
 import PhotoUplaod from '../components/PhotoUplaod';
 import Perk from '../components/Perk';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const PlacesForm = () => {
 

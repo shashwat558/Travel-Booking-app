@@ -23,20 +23,15 @@ const PhotoUplaod:FC<PhotoUplaodProps> = ({addedPhotos, onChange}) => {
     const addPhotoByLink = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
-
-       if (!urlPattern.test(photoLink)) {
-    alert('Please enter a valid image URL (must start with http:// or https:// and end with .jpg, .png, etc.).');
-    return;
-  }
+        
         
         try {
-          const {data:filename} = await axios.post('/user/uploadByLink', {link: photoLink});
+          const {data:filename} = await axios.post<uploadDataLink>('/user/uploadByLink', {link: photoLink});
           console.log(typeof(filename))
-          onChange((prev) => {
-            return [...prev, filename];
-          });
+          onChange((prev :string[]) => {
+            return [...prev, filename]}); // Correctly typed
           setPhotoLink('');
+          
           ;
 
 

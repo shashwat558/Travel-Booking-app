@@ -13,9 +13,11 @@ const PlacesPage:React.FC = () => {
 
   
 
-
-
-
+  const getPlaces = async () => {
+    const places = await axios.get('/user/places');
+    console.log(places)
+  }
+ 
 
   
 
@@ -30,7 +32,7 @@ const PlacesPage:React.FC = () => {
            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
   
-        <span>Add new places</span>
+        <span onClick={() =>getPlaces()}>Add new places</span>
         </Link>
         </div>
 

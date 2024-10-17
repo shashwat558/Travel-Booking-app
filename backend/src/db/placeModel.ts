@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, model, Model } from "mongoose";
 import appUserModel from "./userModel";
 
 type IplaceType =Document & {
-    owner: mongoose.Schema.Types.ObjectId,    
+    owner: mongoose.Schema.Types.ObjectId, 
     title: string,
     address: string,
     photos: [string],

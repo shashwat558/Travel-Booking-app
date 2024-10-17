@@ -76,7 +76,7 @@ router.get('/profile', authMiddleware,async(req:CustomRequest, res:Response) => 
             return res.status(401).json({ message: "Unauthorized access" });
         }
         //@ts-ignore
-        const user = await appUserModel.findById(req.user.id)
+        const user = await appUserModel.findById(req.user?.id)
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -99,11 +99,7 @@ router.post('/uploadByLink', async(req: Request, res: Response) => {
     
     try{
         const { link } = req.body;
-        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
-
-  if (!urlPattern.test(link)) {
-    return res.status(400).json({ error: 'Invalid image URL. Please provide a valid HTTP or HTTPS URL pointing to an image file.' });
-  }
+        
         const imageName ="image" +  Date.now() + '.jpg'
         const dest = path.join(__dirname, 'uploads', imageName)
     
@@ -142,22 +138,34 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
 
 })
 
-router.post('/places', authMiddleware, async(req:Request, res:Response) => {
+router.post('/places', authMiddleware, async(req:CustomRequest, res:Response) => {
    try {
     const {title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
-    const CustomReq = req as CustomRequest;
     //@ts-ignore
-    const username = req.user?.name
-    const newPlace = await  placeModel.create({
-        owner: username,
+    const user = await appUserModel.findById(req.user.id);
+    const userId = user?._id;
+    const username = user?.name;
+    const newPlace = await placeModel.create({
+        owner: userId,
+        ownerName:  username,       
         title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
     })
-    res.json(newPlace)
+    res.status(200).json(newPlace)
    } catch (error) {
     console.log(error)
     
    }
     
+})
+
+router.get('/places', authMiddleware, async(req: CustomRequest, res:Response) => {
+    //@ts-ignore
+    const user = await appUserModel.findById(req.user?.id);
+    const userId = user?._id;
+    const getPlaces = await placeModel.findById({userId});
+    console.log(getPlaces);
+    res.json(getPlaces);
+
 })
 
 export default router;

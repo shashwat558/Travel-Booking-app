@@ -69,13 +69,14 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.get('/profile', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     console.log("ehy");
     try {
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized access" });
         }
         //@ts-ignore
-        const user = yield userModel_1.default.findById(req.user.id);
+        const user = yield userModel_1.default.findById((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -93,10 +94,6 @@ router.post('/logout', (req, res) => {
 router.post('/uploadByLink', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { link } = req.body;
-        const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|bmp|webp)$/i;
-        if (!urlPattern.test(link)) {
-            return res.status(400).json({ error: 'Invalid image URL. Please provide a valid HTTP or HTTPS URL pointing to an image file.' });
-        }
         const imageName = "image" + Date.now() + '.jpg';
         const dest = path_1.default.join(__dirname, 'uploads', imageName);
         const options = yield image_downloader_1.default.image({
@@ -131,20 +128,30 @@ router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
     return res.status(200).json(uploadFiles);
 });
 router.post('/places', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         const { title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut } = req.body;
-        const CustomReq = req;
         //@ts-ignore
-        const username = (_a = req.user) === null || _a === void 0 ? void 0 : _a.name;
+        const user = yield userModel_1.default.findById(req.user.id);
+        const userId = user === null || user === void 0 ? void 0 : user._id;
+        const username = user === null || user === void 0 ? void 0 : user.name;
         const newPlace = yield placeModel_1.default.create({
-            owner: username,
+            owner: userId,
+            ownerName: username,
             title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
         });
-        res.json(newPlace);
+        res.status(200).json(newPlace);
     }
     catch (error) {
         console.log(error);
     }
+}));
+router.get('/places', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    //@ts-ignore
+    const user = yield userModel_1.default.findById((_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
+    const userId = user === null || user === void 0 ? void 0 : user._id;
+    const getPlaces = yield placeModel_1.default.findById({ userId });
+    console.log(getPlaces);
+    res.json(getPlaces);
 }));
 exports.default = router;
