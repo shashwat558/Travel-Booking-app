@@ -150,7 +150,7 @@ router.get('/places', middleware_1.default, (req, res) => __awaiter(void 0, void
     //@ts-ignore
     const user = yield userModel_1.default.findById((_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
     const userId = user === null || user === void 0 ? void 0 : user._id;
-    const getPlaces = yield placeModel_1.default.findById({ userId });
+    const getPlaces = yield placeModel_1.default.find({ owner: userId });
     console.log(getPlaces);
     res.json(getPlaces);
 }));

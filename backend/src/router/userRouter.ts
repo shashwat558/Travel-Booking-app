@@ -162,7 +162,7 @@ router.get('/places', authMiddleware, async(req: CustomRequest, res:Response) =>
     //@ts-ignore
     const user = await appUserModel.findById(req.user?.id);
     const userId = user?._id;
-    const getPlaces = await placeModel.findById({userId});
+    const getPlaces = await placeModel.find({owner: userId});
     console.log(getPlaces);
     res.json(getPlaces);
 
