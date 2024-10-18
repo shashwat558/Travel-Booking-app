@@ -147,7 +147,7 @@ router.post('/places', authMiddleware, async(req:CustomRequest, res:Response) =>
     const username = user?.name;
     const newPlace = await placeModel.create({
         owner: userId,
-        ownerName:  username,       
+        ownerName:  username || "John",       
         title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
     })
     res.status(200).json(newPlace)
