@@ -26,13 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const placeSchema = new mongoose_1.Schema({
     owner: { type: mongoose_1.default.Schema.Types.ObjectId, ref: "appUser" },
+    ownerName: String,
     title: String,
     address: String,
     photos: [String],
     description: String,
     perks: [String],
     extraInfo: String,
-    checkIN: Number,
+    checkIn: Number,
     checkOut: Number,
     maxGuest: Number
 });

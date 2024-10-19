@@ -130,13 +130,14 @@ router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
 router.post('/places', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut } = req.body;
+        console.log(req.body);
         //@ts-ignore
         const user = yield userModel_1.default.findById(req.user.id);
         const userId = user === null || user === void 0 ? void 0 : user._id;
         const username = user === null || user === void 0 ? void 0 : user.name;
         const newPlace = yield placeModel_1.default.create({
             owner: userId,
-            ownerName: username,
+            ownerName: username || "John",
             title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut
         });
         res.status(200).json(newPlace);

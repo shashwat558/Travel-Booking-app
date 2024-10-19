@@ -3,13 +3,14 @@ import appUserModel from "./userModel";
 
 type IplaceType =Document & {
     owner: mongoose.Schema.Types.ObjectId, 
+    ownerName: string;
     title: string,
     address: string,
     photos: [string],
     description: string,
     perks: [string],
     extraInfo: string,
-    checkIN: number,
+    checkIn: number,
     checkOut: number,
     maxGuest: number,
 
@@ -17,13 +18,14 @@ type IplaceType =Document & {
 
 const placeSchema:Schema<IplaceType> = new Schema({
     owner: {type:mongoose.Schema.Types.ObjectId, ref:"appUser"},
+    ownerName: String,
     title: String,
     address: String,
     photos: [String],
     description: String,
     perks: [String],
     extraInfo: String,
-    checkIN: Number,
+    checkIn: Number,
     checkOut: Number,
     maxGuest: Number
 })

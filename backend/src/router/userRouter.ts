@@ -141,6 +141,7 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
 router.post('/places', authMiddleware, async(req:CustomRequest, res:Response) => {
    try {
     const {title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
+    console.log(req.body);
     //@ts-ignore
     const user = await appUserModel.findById(req.user.id);
     const userId = user?._id;

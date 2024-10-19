@@ -22,7 +22,7 @@ const limitText = (text:string, wordLimit: number): string => {
 const PlacesCard = ({title, description, photo, owner, maxGuest, perks}: Props) => {
     
   return (
-    <div className='w-full p-4 border-[1px] border-gray-600 rounded-md shadow-lg'>
+    <div className='font-[Outfit] w-full p-4 border-[1px] border-gray-600 rounded-md shadow-lg'>
         <div className='flex justify-around item-center p-2'>
             <div className='flex flex-col gap-5 text-left'>
                 <h2 className='text-xl font-bold capitalize text-gray-900 tracking-normal'>{title}</h2>
