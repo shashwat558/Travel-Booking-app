@@ -4,6 +4,7 @@ import PhotoUplaod from '../components/PhotoUplaod';
 import Perk from '../components/Perk';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AccountNav from './AccountNav';
 
 const PlacesForm = () => {
 
@@ -61,6 +62,7 @@ const PlacesForm = () => {
   }
   return (
     <div className='text-left'>
+      <AccountNav />
           <form onSubmit={addNewPlace}>
           {preInput('Title', 'Title for your place. should be short and catchy as in advertisement')}
             <input type='text' placeholder='title' value={title}  onChange={(e:  React.ChangeEvent<HTMLInputElement>) => settitle(e.target.value)}/>

@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import PlacesForm from './PlacesForm';
 import axios from 'axios';
 import PlacesCard from '../components/PlacesCard';
+import AccountNav from './AccountNav';
 // import AccountNav from './AccountNav'
 
 interface PlaceDataProps {
@@ -56,6 +57,7 @@ const PlacesPage:React.FC = () => {
 
   return (
     <div>
+      <AccountNav />
       {action !== "new" && (
        
         <div>
@@ -70,7 +72,16 @@ const PlacesPage:React.FC = () => {
         </div>
         <div className='flex flex-col gap-3 mt-4'>
           {places.map((place) => (
-            <PlacesCard key={place.id} title={place.title} description={place.description} owner={place.owner} maxGuest={place.maxGuest} perks={place.perks} photo={place.photos}/>
+             <Link to={place.id} key={place.id}> 
+             <PlacesCard 
+               title={place.title} 
+               description={place.description} 
+               owner={place.owner} 
+               maxGuest={place.maxGuest} 
+               perks={place.perks} 
+               photo={place.photos}
+             />
+           </Link>
           ))}
         </div>
         </div>
@@ -79,7 +90,11 @@ const PlacesPage:React.FC = () => {
 
       )}
       {action === "new" && (
-        <PlacesForm />
+        
+          <PlacesForm />
+        
+        
+        
         
 
       )}
