@@ -141,7 +141,7 @@ router.post('/upload', photoMiddleware.array('photos', 100),(req: Request, res: 
 router.post('/places', authMiddleware, async(req:CustomRequest, res:Response) => {
    try {
     const {title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
-    console.log(req.body);
+    
     //@ts-ignore
     const user = await appUserModel.findById(req.user.id);
     const userId = user?._id;
@@ -164,7 +164,7 @@ router.get('/places', authMiddleware, async(req: CustomRequest, res:Response) =>
     const user = await appUserModel.findById(req.user?.id);
     const userId = user?._id;
     const getPlaces = await placeModel.find({owner: userId});
-    console.log(getPlaces);
+    
     res.json(getPlaces);
 
 });
@@ -173,6 +173,39 @@ router.get('/places/:id', async(req:Request, res: Response) => {
    const {id} = req.params;
    const place = await placeModel.findById(id);
    res.status(200).json(place);
+})
+
+router.put('/places/:id',authMiddleware, async(req:CustomRequest, res:Response) =>{
+    const {id, title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut} = req.body;
+    //@ts-ignore
+    const user = await appUserModel.findById(req.user?.id);
+    const userId = user?._id;
+
+    const place = await placeModel.findById(id);
+    console.log(userId, place?.owner)
+    if(userId === place?.owner.toString()){
+        await placeModel.findByIdAndUpdate(
+            id,
+            {
+              title,
+              address,
+              description,
+              perks,
+              photos: addedPhotos, // Assuming this is for photo updates
+              extraInfo,
+              maxGuest,
+              checkIn,
+              checkOut,
+            },
+            { new: true } // Return the updated document
+          );
+          res.status(200).json({ message: 'Place updated successfully' , place});
+    
+    }else {
+        res.status(403).json({ message: 'Unauthorized to update this place' });
+    }
+
+
 })
 
 export default router;

@@ -1,13 +1,14 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 
 import PhotoUplaod from '../components/PhotoUplaod';
 import Perk from '../components/Perk';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import AccountNav from './AccountNav';
+import { PlaceDataProps } from './PlacesPage';
 
 const PlacesForm = () => {
-
+  const {id} = useParams();
   
   const [title, settitle] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -20,6 +21,31 @@ const PlacesForm = () => {
   const [maxGuest, setMaxGuest] = useState<number>(1);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!id){
+      return;
+    }
+    const getPlaces = async () => {
+     const response =  await axios.get<PlaceDataProps>("/user/places/"+id);
+     const data = response.data;
+     settitle(data.title);
+     setAddress(data.address);
+     setAddedPhotos(data.photos);
+     setPerks(data.perks);
+     setExtraInfo(data.extraInfo);
+     setDescription(data.description);
+    //  setCheckIn(data.checkIn);
+    //  setCheckOut(data.checkOut);
+    setMaxGuest(data.maxGuest);
+    } 
+    getPlaces();
+
+
+    
+   
+    
+  },[id])
 
 
   function inputHeader(text:string): ReactElement{

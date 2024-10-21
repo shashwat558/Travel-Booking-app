@@ -130,7 +130,6 @@ router.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
 router.post('/places', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut } = req.body;
-        console.log(req.body);
         //@ts-ignore
         const user = yield userModel_1.default.findById(req.user.id);
         const userId = user === null || user === void 0 ? void 0 : user._id;
@@ -152,7 +151,38 @@ router.get('/places', middleware_1.default, (req, res) => __awaiter(void 0, void
     const user = yield userModel_1.default.findById((_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
     const userId = user === null || user === void 0 ? void 0 : user._id;
     const getPlaces = yield placeModel_1.default.find({ owner: userId });
-    console.log(getPlaces);
     res.json(getPlaces);
+}));
+router.get('/places/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const place = yield placeModel_1.default.findById(id);
+    res.status(200).json(place);
+}));
+router.put('/places/:id', middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
+    const { id, title, address, description, perks, addedPhotos, extraInfo, maxGuest, checkIn, checkOut } = req.body;
+    //@ts-ignore
+    const user = yield userModel_1.default.findById((_c = req.user) === null || _c === void 0 ? void 0 : _c.id);
+    const userId = user === null || user === void 0 ? void 0 : user._id;
+    const place = yield placeModel_1.default.findById(id);
+    console.log(userId, place === null || place === void 0 ? void 0 : place.owner);
+    if (userId === (place === null || place === void 0 ? void 0 : place.owner.toString())) {
+        yield placeModel_1.default.findByIdAndUpdate(id, {
+            title,
+            address,
+            description,
+            perks,
+            photos: addedPhotos,
+            extraInfo,
+            maxGuest,
+            checkIn,
+            checkOut,
+        }, { new: true } // Return the updated document
+        );
+        res.status(200).json({ message: 'Place updated successfully', place });
+    }
+    else {
+        res.status(403).json({ message: 'Unauthorized to update this place' });
+    }
 }));
 exports.default = router;
