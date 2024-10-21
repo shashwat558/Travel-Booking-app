@@ -8,7 +8,8 @@ import PlacesCard from '../components/PlacesCard';
 import AccountNav from './AccountNav';
 // import AccountNav from './AccountNav'
 
-interface PlaceDataProps {
+export interface PlaceDataProps {
+  _id: string;
   id: string;
   owner: string;
   title: string;
@@ -72,7 +73,7 @@ const PlacesPage:React.FC = () => {
         </div>
         <div className='flex flex-col gap-3 mt-4'>
           {places.map((place) => (
-             <Link to={place.id} key={place.id}> 
+             <Link to={'/profile/places/'+place._id} key={place.id}> 
              <PlacesCard 
                title={place.title} 
                description={place.description} 

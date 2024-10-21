@@ -167,6 +167,12 @@ router.get('/places', authMiddleware, async(req: CustomRequest, res:Response) =>
     console.log(getPlaces);
     res.json(getPlaces);
 
+});
+
+router.get('/places/:id', async(req:Request, res: Response) => {
+   const {id} = req.params;
+   const place = await placeModel.findById(id);
+   res.status(200).json(place);
 })
 
 export default router;
